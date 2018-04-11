@@ -1,0 +1,46 @@
+{
+    "name": "vscode-talk",
+    "displayName": "vscode-talk",
+    "description": "",
+    "version": "0.0.1",
+    "publisher": "dukeboard",
+    "engines": {
+        "vscode": "^1.22.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [],
+    "main": "./out/extension",
+    "contributes": {
+        "markdown.markdownItPlugins": true,
+        "markdown.previewStyles": [
+            "./screen-4x3.css",
+            "./fonts/roboto_light_macroman/stylesheet.css",
+            "./fontawesome/css/fontawesome-all.css",
+            "./agate.css"
+        ],
+        "markdown.previewScripts": [
+            "./preview.js"
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "npm run compile && node ./node_modules/vscode/bin/test"
+    },
+    "devDependencies": {
+        "typescript": "^2.6.1",
+        "vscode": "^1.1.6",
+        "@types/node": "^7.0.43",
+        "@types/mocha": "^2.2.42"
+    },
+    "dependencies": {
+        "markdown-it-decorate": "^1.2.2",
+        "markdown-it-regexp": "^0.4.0",
+        "markdown-it-sub": "^1.0.0",
+        "markdown-it-sup": "^1.0.0"
+    }
+}
