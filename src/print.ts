@@ -124,6 +124,7 @@ function print(type: string) {
     </head>
     <body class="shower list">
         ${body}
+        <div class="progress"></div>
     </body>
     ${scripts.map(js => wrapWithScriptTag(js)).join('\n')}
     </html>`;
