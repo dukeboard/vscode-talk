@@ -108,10 +108,7 @@ function print(type: string) {
         });
     }
 
-
-
-
-    let styleSheets = ['./screen-4x3.css', './fonts/roboto_light_macroman/stylesheet.inline.css', './fontawesome/css/fontawesome-all.inline.css', './agate.css'].map(s => getMediaPath(s))
+    let styleSheets = ['./screen-4x3.inline.css', './fonts/roboto_light_macroman/stylesheet.inline.css', './fontawesome/css/fontawesome-all.inline2.css', './agate.css'].map(s => getMediaPath(s))
         .concat(getCustomStyleSheets(doc.uri));
 
     let scripts = ['./shower.min.js'].map(s => getMediaPath(s));
@@ -119,6 +116,9 @@ function print(type: string) {
     let html = `<!DOCTYPE html>
     <html>
     <head>
+        <meta charset="utf-8">
+	    <meta http-equiv="x-ua-compatible" content="ie=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
         ${styleSheets.map(css => wrapWithStyleTag(css)).join('\n')}
     </head>

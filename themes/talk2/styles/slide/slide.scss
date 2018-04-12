@@ -1,0 +1,177 @@
+// ------------------------------------------------------------------
+// Slide
+// ------------------------------------------------------------------
+// 1. Number ........... Red ribbon with page number
+// 2. Content .......... Various content types
+// 3. Modifiers......... Slide modifiers
+// 4. Elements ......... Content elements
+// ------------------------------------------------------------------
+
+.slide {
+
+	position:relative;
+	z-index:1;
+	overflow:hidden;
+	padding:80px 80px 0;
+	width:$width;
+	height:$height;
+	background:#FFF;
+	font-size:28px;
+	// Number
+
+	&::after {
+		font-weight: bold;
+		position:absolute;
+		bottom:0;
+		right:80px;
+		padding-bottom:10px;
+		width:50px;
+		height:80px;
+		font-size:20px;
+		//background:url(../images/ribbon.svg) no-repeat;
+		color: $grey;
+		counter-increment:slide;
+		content:counter(slide);
+		text-align:center;
+		}
+
+	// Content
+
+	@import
+		'content/basic',
+		'content/inline',
+		'content/quote',
+		'content/lists',
+		'content/table',
+		'content/code',
+		'content/footer';
+
+	// Modifiers
+
+	@import
+		'modifiers/grid',
+		'modifiers/black',
+		'modifiers/white';
+
+	// Elements
+
+	@import
+		'elements/columns',
+		'elements/shout',
+		'elements/cover',
+		'elements/place';
+
+		b, strong {
+			color: #f4b400;
+		}
+		i, em {
+			color: #777872;
+		}
+
+		h1 {
+			padding-bottom: 0.3em;
+		}
+		h2 {
+			padding-bottom: 0.2em;
+		}
+
+	}
+
+.darkSlide {
+		background:#272822;
+		color: #FFFFFF;
+		h1,h2,h3 {
+			color: #FFFFFF;
+		}
+		h4 {
+			color: #777872;
+		}
+}
+
+.greenSlide {
+		background:#33B490;
+		color: #FFF5E3;
+		em, i {
+			color: #464E70;
+		}
+		b, strong {
+			color: #fcde32;
+		}
+		h1,h2,h3 {
+			color: #FFF5E3;
+		}
+		h4 {
+			color: #464E70;
+		}
+		ol, ul {
+			li {
+				&::before {
+					color: #464E70;
+				}
+			}
+		}
+}
+
+.darkBlueSlide {
+		background:#464E70;
+		color: #FFF5E3;
+		em, i {
+			color: #33B490;
+		}
+		b, strong {
+			color: #FF9003;
+		}
+		h1,h2,h3 {
+			color: #33B490;
+		}
+		h4 {
+			color: #33B490;
+		}
+		ol, ul {
+			li {
+				&::before {
+					color: #33B490;
+				}
+			}
+		}
+}
+
+
+.redSlide {
+		background:#db4441;
+		color: #FFFFFF;
+		h1,h2,h3 {
+			color: #FFFFFF;
+		}
+		b, strong {
+			color: #fcde32;
+		}
+		ol, ul {
+			li {
+				&::before {
+					color: #46c3d3;
+				}
+			}
+		}
+		i, em {
+			color: #46c3d3;
+		}
+}
+
+.yellowSlide {
+		background:#f4b400;
+		color: #FFFFFF;
+		b, strong {
+			color: #f8305f;
+		}
+		h1, h2, h3 {
+			color: #FFFFFF;
+		}
+		ol, ul {
+			li {
+				&::before {
+					color: #777872;
+				}
+			}
+		}
+}
