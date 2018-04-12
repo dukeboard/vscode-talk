@@ -10,6 +10,10 @@
     "categories": [
         "Other"
     ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/dukeboard/vscode-talk.git"
+    },
     "activationEvents": [
         "onLanguage:markdown"
     ],
@@ -25,7 +29,7 @@
         "markdown.previewScripts": [
             "./preview.js"
         ],
-        "commands":[
+        "commands": [
             {
                 "command": "markdown.extension.printToHtml",
                 "title": "Markdown: Print current document to HTML"
