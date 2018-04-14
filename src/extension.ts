@@ -2,6 +2,8 @@
 
 import * as vscode from 'vscode';
 import * as print from './print';
+import {ImgCompletion} from './img-completion';
+
 
 function hr_section(tokens, idx, options, env, self) {
     var token = tokens[idx];
@@ -21,6 +23,12 @@ function hr_section(tokens, idx, options, env, self) {
 
 export function activate(context: vscode.ExtensionContext) {
     print.activate(context);
+
+    var mdSelect : vscode.DocumentSelector = [{
+        pattern: '**/*.md'
+    }];
+    context.subscriptions.push(vscode.languages.registerCompletionItemProvider(mdSelect, new ImgCompletion(),"/","."));
+
     return {
         extendMarkdownIt(md: any) {
             md.renderer.rules['hr'] = hr_section;
