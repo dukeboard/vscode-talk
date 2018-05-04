@@ -7,6 +7,10 @@
 // 4. Elements ......... Content elements
 // ------------------------------------------------------------------
 
+[id='1']::after {
+	visibility: hidden;
+}
+
 .slide {
 
 	position:relative;
