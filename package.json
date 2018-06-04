@@ -32,9 +32,23 @@
         "commands": [
             {
                 "command": "markdown.extension.printToHtml",
-                "title": "Markdown: Print current document to HTML"
+                "title": "Markdown: Print current document to HTML",
+                "category": "Print",
+                "icon": {
+                    "light": "./media/icon-light.svg",
+                    "dark": "./media/icon-dark.svg"
+                }
             }
-        ]
+        ],
+        "menus": {
+            "editor/title": [
+                {
+                    "when": "editorLangId == markdown",
+                    "command": "markdown.extension.printToHtml",
+                    "group": "navigation"
+                }
+            ]
+        }
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
