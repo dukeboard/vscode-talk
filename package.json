@@ -4,8 +4,11 @@
     "description": "",
     "version": "0.0.2",
     "publisher": "dukeboard",
+    "config": {
+        "puppeteer_skip_chromium_download": true
+    },
     "engines": {
-        "vscode": "^1.22.0"
+        "vscode": "^1.24.0"
     },
     "categories": [
         "Other"
@@ -35,13 +38,27 @@
                 "title": "Markdown: Print current document to HTML",
                 "category": "Print",
                 "icon": {
-                    "light": "./media/icon-light.svg",
-                    "dark": "./media/icon-dark.svg"
+                    "light": "./media/html.svg",
+                    "dark": "./media/html.svg"
+                }
+            },
+            {
+                "command": "markdown.extension.printToPdf",
+                "title": "Markdown: Print current document to PDF",
+                "category": "Print",
+                "icon": {
+                    "light": "./media/pdf.svg",
+                    "dark": "./media/pdf.svg"
                 }
             }
         ],
         "menus": {
             "editor/title": [
+                {
+                    "when": "editorLangId == markdown",
+                    "command": "markdown.extension.printToPdf",
+                    "group": "navigation"
+                },
                 {
                     "when": "editorLangId == markdown",
                     "command": "markdown.extension.printToHtml",
@@ -64,10 +81,11 @@
         "@types/mocha": "^2.2.42"
     },
     "dependencies": {
+        "fs": "0.0.1-security",
         "markdown-it-decorate": "^1.2.2",
         "markdown-it-regexp": "^0.4.0",
         "markdown-it-sub": "^1.0.0",
         "markdown-it-sup": "^1.0.0",
-        "fs": "0.0.1-security"
+        "puppeteer": "^1.5.0"
     }
 }

@@ -6,6 +6,8 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from "fs";
 //import { slugify } from './util';
+import * as puppeteer from 'puppeteer'
+import * as os from 'os'
 
 const officialExt = vscode.extensions.getExtension("vscode.markdown-language-features");
 
@@ -59,9 +61,71 @@ let thisContext: vscode.ExtensionContext;
 export function activate(context: vscode.ExtensionContext) {
     thisContext = context;
     context.subscriptions.push(vscode.commands.registerCommand('markdown.extension.printToHtml', () => { print('html'); }));
+    context.subscriptions.push(vscode.commands.registerCommand('markdown.extension.printToPdf', () => { print('pdf'); }));
 }
 
 export function deactivate() { }
+
+function printToPDF(htmlCode: string, outPath: string) {
+    if(os.platform() !== 'darwin') {
+        vscode.window.showErrorMessage("Currently only available on OSX. Print cancelled.");
+        return;
+    }
+    if(!fs.existsSync("/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome")) {
+        vscode.window.showErrorMessage("Chrome browser not installed on this computer. Please install a running version. Print cancelled.");
+        return;
+    }
+
+    const prBrowser: Promise<puppeteer.Browser> = puppeteer.launch({"executablePath": "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"});
+    prBrowser.then((browser: puppeteer.Browser) => {
+        const prPage: Promise<puppeteer.Page> = browser.newPage();
+        prPage.then((page: puppeteer.Page) => {
+            let tempHtml = outPath.replace(/\.pdf$/, ".html");
+            const insertIndex = outPath.lastIndexOf('/') + 1;
+            tempHtml = tempHtml.substr(0, insertIndex) + '.' + tempHtml.substr(insertIndex);
+    
+            fs.writeFile(tempHtml, htmlCode, 'utf-8', function(err) {
+                if(err) {
+                    vscode.window.showErrorMessage("Error while generating temporaty html file: " + err);
+                } else {
+                    const respPage: Promise<puppeteer.Response> = page.goto('file://' + tempHtml, {waitUntil: 'networkidle2'});
+                    respPage.then(() => {
+                        page.pdf({
+                                path: outPath,
+                                width: '768px',
+                                height: '576px'
+                            }).then(() => {
+                                browser.close().then(() => {
+                                    fs.unlink(tempHtml, (err) => {
+                                        if(err) {
+                                            vscode.window.showErrorMessage("Error while deleting the temporary file: " + err);
+                                        } else {
+                                            vscode.window.showInformationMessage("Printing to PDF: Finished");
+                                        }
+                                       
+                                    });
+                                });
+                        });
+                    });
+                    respPage.catch((reason: any) => {
+                        vscode.window.showErrorMessage("Error while loading the page Chrome browser: " + reason);
+                    });
+                }
+            });
+        })
+        prPage.catch((reason: any) => {
+            vscode.window.showErrorMessage("Error while creating the page Chrome browser: " + reason);
+        });
+
+        
+
+    });
+
+    prBrowser.catch((reason: any) => {
+        vscode.window.showErrorMessage("Error while opening Chrome browser: " + reason);
+    })
+
+}
 
 function print(type: string) {
     let editor = vscode.window.activeTextEditor;
@@ -76,16 +140,16 @@ function print(type: string) {
         doc.save();
     }
 
-    let statusBarMsg = vscode.window.setStatusBarMessage(`Printing '${path.basename(doc.fileName)}' to ${type.toUpperCase()} ...`, 1000);
-
+    let statusBarMsg = vscode.window.setStatusBarMessage(`Printing '${path.basename(doc.fileName)}' to ${type.toUpperCase()} ...`);
+    
     /**
      * Modified from <https://github.com/Microsoft/vscode/tree/master/extensions/markdown>
      * src/previewContentProvider MDDocumentContentProvider provideTextDocumentContent
      */
-    let outPath = doc.fileName.replace(/\.(md|MD|markdown)$/, `.${type}`);
-    outPath = outPath.replace(/^([cdefghij]):\\/, function (match, p1: string) {
-        return `${p1.toUpperCase()}:\\`; // Capitalize drive letter
-    });
+    // let outPath = doc.fileName.replace(/\.(md|MD|markdown)$/, `.${type}`);
+    // outPath = outPath.replace(/^([cdefghij]):\\/, function (match, p1: string) {
+    //     return `${p1.toUpperCase()}:\\`; // Capitalize drive letter
+    // });
 
     let body = render(doc.getText(), vscode.workspace.getConfiguration('markdown.preview', doc.uri));
     var trimmed = body.trim();
@@ -129,15 +193,46 @@ function print(type: string) {
     ${scripts.map(js => wrapWithScriptTag(js)).join('\n')}
     </html>`;
 
+    const saveDialogFilter: vscode.SaveDialogOptions = {};
     switch (type) {
         case 'html':
-            fs.writeFile(outPath, html, 'utf-8', function (err) {
-                if (err) { console.log(err); }
-            });
+            saveDialogFilter.filters = {
+                'Html': ['html']
+            };
             break;
         case 'pdf':
+            saveDialogFilter.filters = {
+                'PDF': ['pdf']
+            };
             break;
     }
+
+    const prOutPath: Thenable<vscode.Uri | undefined> = vscode.window.showSaveDialog(saveDialogFilter);
+    prOutPath.then((path: vscode.Uri) => {
+        if(path) {
+            switch (type) {
+                case 'html':
+                    fs.writeFile(path.fsPath, html, 'utf-8', function (err) {
+                        if (err) { console.log(err); }
+                        statusBarMsg.dispose();
+                    });
+                    break;
+                case 'pdf':
+                    printToPDF(html, path.fsPath);
+                    statusBarMsg.dispose();
+                    break;
+            }
+        } else {
+            vscode.window.setStatusBarMessage(`Printing cancled`, 1000);
+            statusBarMsg.dispose();
+        }
+    }, (reason: any) => {
+        vscode.window.showErrorMessage("Error with the save dialog: " + reason);
+        statusBarMsg.dispose();
+    });
+    
+
+    
 }
 
 function render(text: string, config: vscode.WorkspaceConfiguration) {
