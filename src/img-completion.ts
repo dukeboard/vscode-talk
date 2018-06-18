@@ -66,7 +66,7 @@ export class ImgCompletion implements vs.CompletionItemProvider {
     }
 
     private isImage(file: string): boolean {
-        return file.endsWith(".svg") || file.endsWith(".png");
+        return file.endsWith(".svg") || file.endsWith(".png") || file.endsWith(".jpeg") || file.endsWith(".jpg") || file.endsWith(".gif");
     }
 
 
