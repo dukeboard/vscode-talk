@@ -1,6 +1,6 @@
 # vscode-talk README
 
-<img src="demo.gif" />
+![demo](demo.gif)
 
 ### For more information
 
