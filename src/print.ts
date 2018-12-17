@@ -7,14 +7,13 @@ import * as path from 'path';
 import * as fs from "fs";
 //import { slugify } from './util';
 
-const officialExt = vscode.extensions.getExtension("vscode.markdown-language-features");
 
-const tocModule = require(path.join(officialExt.extensionPath, 'out', 'tableOfContentsProvider'));
-const TocProvider = tocModule.TableOfContentsProvider;
-const Slug = tocModule.Slug;
+//const tocModule = require(path.join(officialExt.extensionPath, 'out', 'tableOfContentsProvider'));
+//const TocProvider = tocModule.TableOfContentsProvider;
+//const Slug = tocModule.Slug;
 const Plugin = require('markdown-it-regexp');
-const hljs = require(path.join(officialExt.extensionPath, 'node_modules', 'highlight.js'));
-const mdnh = require(path.join(officialExt.extensionPath, 'node_modules', 'markdown-it-named-headers'));
+const hljs = require('highlightjs');
+const mdnh = require('markdown-it-named-headers');
 function hr_section(tokens, idx, options, env, self) {
     var token = tokens[idx];
     var result = '</section>';
@@ -30,7 +29,7 @@ function hr_section(tokens, idx, options, env, self) {
     result = result + '<section class="' + classes + '">';
     return result;
 };
-const md = require(path.join(officialExt.extensionPath, 'node_modules', 'markdown-it'))({
+const md = require('markdown-it')({
     html: true,
     highlight: (str: string, lang: string) => {
         if (lang && hljs.getLanguage(lang)) {

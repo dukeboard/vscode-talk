@@ -64,10 +64,13 @@
         "vscode": "^1.1.21"
     },
     "dependencies": {
+        "fs": "0.0.1-security",
+        "highlightjs": "^9.12.0",
+        "markdown-it": "^8.4.2",
         "markdown-it-decorate": "^1.2.2",
+        "markdown-it-named-headers": "0.0.4",
         "markdown-it-regexp": "^0.4.0",
         "markdown-it-sub": "^1.0.0",
-        "markdown-it-sup": "^1.0.0",
-        "fs": "0.0.1-security"
+        "markdown-it-sup": "^1.0.0"
     }
 }
